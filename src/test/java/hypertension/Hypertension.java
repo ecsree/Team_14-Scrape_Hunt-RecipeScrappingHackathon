@@ -39,7 +39,9 @@ public class Hypertension {
            driver.findElement(By.xpath("//a[@id='ctl00_cntleftpanel_ttlhealthtree_tvTtlHealtht167']")).click();
            List<WebElement> page = driver.findElements(By.xpath("//div[@style='text-align:right;padding-bottom:15px;']/a"));
            int pagesize = page.size();
-           int column = 1;
+           //int Excelcolumn = 1;
+           int Excelcolumn = HypertensionExcelReader.getLastColumn("Sheet1");
+           System.out.println("Starting column=" + Excelcolumn );
            for (int j = 1; j <= pagesize; j++) {
         	   driver.findElement(By.xpath("//div[@style='text-align:right;padding-bottom:15px;']/a["+j+"]")).click();
         	   
@@ -69,8 +71,14 @@ public class Hypertension {
        	    System.out.println("IngreList=" + IngreList );
        	    String PrepMethod = driver.findElement(By.xpath("//div[@id='ctl00_cntrightpanel_pnlRcpMethod']")).getText();
        	    //System.out.println("PrepMethod=" + PrepMethod );
-       	    String NutriValue = driver.findElement(By.id("rcpnutrients")).getText();System.out.println("cookingTime=" + cookingTime );
-       	    //System.out.println("NutriValue=" + NutriValue );
+       	    String NutriValue ="";
+    	    try {
+    	      NutriValue = driver.findElement(By.id("rcpnutrients")).getText();
+    	    System.out.println("cookingTime=" + cookingTime );
+    	    }
+    	    catch (Exception e){
+    	    	 NutriValue ="";
+    	    }
        	    String URL = driver.getCurrentUrl();
        	    
        	    String[][] ExcludeCode= HypertensionExcelReader.getData("Sheet1");
@@ -114,7 +122,7 @@ public class Hypertension {
 		       	if ((!isElimIngredExists) && (isAddIngredientExists)) {
 		       		System.out.println("Added to excel "+RecipeName);
 		       	HypertensionExcelWriter excelWriter = new HypertensionExcelWriter();
-				excelWriter.WriteData("Sheet1", 0, column++, ID, RecipeName, IngreList, PreTime, cookingTime, PrepMethod,
+				excelWriter.WriteData("Sheet1", 0, Excelcolumn++, ID, RecipeName, IngreList, PreTime, cookingTime, PrepMethod,
 						NutriValue, URL);
 		       	}
 		    driver.navigate().back();   	

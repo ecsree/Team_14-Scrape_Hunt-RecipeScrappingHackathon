@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -40,6 +41,24 @@ public class HypertensionExcelReader {
 		return testdata;
 	}
 	
+	public static int getLastColumn(String sheetname) throws IOException
+	{
+		String projectDir=System.getProperty("user.dir");
+		String path=projectDir+"/src/test/resources/Data/HypertensionRecipeList.xlsx";
+		File ExcelFile= new File(path);
+		FileInputStream FIS= new FileInputStream(ExcelFile);
+		XSSFWorkbook workbook= new XSSFWorkbook(FIS);
+		XSSFSheet sheet=workbook.getSheet(sheetname);
+		int row= sheet.getLastRowNum();
+		//System.out.println("rows"+row);
+		Row rowcell=sheet.getRow(row);
+		int totcol=rowcell.getLastCellNum();
+		//System.out.println("column"+totcol);
+		//DataFormatter format= new DataFormatter();
+		//String testdata[][]= new String[row][totcol];
+		
+		return totcol+1;
+	}
 	
 
 }
