@@ -60,21 +60,36 @@ public class EliminateAndToAddRecipies {
 		List<String> addPreparationMethod=new ArrayList<String>();
 		List<String> addNutritionValue = new ArrayList<String>();
 		List<String> addRecipeUrl=new ArrayList<String>();
-	//Eliminate
-		//String[] ingradientsToEliminate = { "brinjal","ragi", "bajra", "jeera", "Cakes", "Pastries", "White bread","Fried food","Oats", "Pizza", "Burger", "Carbonated beverages", "Sugary foods (sweets, icecreams) and beverages (soda, juices)", "Red meat", "Processed meat", "Dairy", "Soy products", "Gluten", "Pasta", "White rice", "Doughnuts", "Fries", "Coffee", "Seed oils- vegetable oil, soybean oil, canola oil, rapeseed oil, sunflower oil, safflower oil","chilli"};
-		ReadFromExcel object= new ReadFromExcel();
-		List<String> ingradientsToEliminate = object.getData("C:/Testing/Saritha/Team_14-Scrape_Hunt-RecipeScrappingHackathon/src/test/java/Resources/PCOSExcelOutput/IngredientsDataInput.xlsx", "ToEliminate");
-		List<String> fruitsVeggiesToAdd = object.getData("C:\\Testing\\Saritha\\RecepeScrapping\\src\\test\\resources\\IngredientsDataInput.xlsx", "ToAdd");
+		
+		List<String> allergyRecID=new ArrayList<String>();
+		List<String> allergyRecName=new ArrayList<String>();
+		List<String> allergyPreparationTime=new ArrayList<String>();
+		List<String> allergyCookTime=new ArrayList<String>();
+		List<String> allergyIngradients=new ArrayList<String>();
+		List<String> allergyPreparationMethod=new ArrayList<String>();
+		List<String> allergyNutritionValue = new ArrayList<String>();
+		List<String> allergyRecipeUrl=new ArrayList<String>();
+//nutsAllergy		
+		List<String> nutsallergyRecID=new ArrayList<String>();
+		List<String> nutsallergyRecName=new ArrayList<String>();
+		List<String> nutsallergyPreparationTime=new ArrayList<String>();
+		List<String> nutsallergyCookTime=new ArrayList<String>();
+		List<String> nutsallergyIngradients=new ArrayList<String>();
+		List<String> nutsallergyPreparationMethod=new ArrayList<String>();
+		List<String> nutsallergyNutritionValue = new ArrayList<String>();
+		List<String> nutsallergyRecipeUrl=new ArrayList<String>();
 		
 		
-		System.out.println("from excel eliminate , size - "+ingradientsToEliminate.size());
-		System.out.println("from excel add, size - "+fruitsVeggiesToAdd.size());
-
-		//String[] ingradientsToAdd = { "High fiber fruits", "vegetables"};
-		
+	//Eliminate Part
+		ReadFromExcel object= new ReadFromExcel();		
+		List<String> ingradientsToEliminate = object.getData(System.getProperty("user.dir") + "\\src\\test\\resources\\IngredientsDataInput.xlsx", "ToEliminate");
+		List<String> fruitsVeggiesToAdd = object.getData(System.getProperty("user.dir") + "\\src\\test\\resources\\IngredientsDataInput.xlsx", "ToAdd");
+		List<String> allergiesToAdd = object.getData(System.getProperty("user.dir") + "\\src\\test\\resources\\IngredientsDataInput.xlsx", "Allergies");
+		List<String> nutsAllergiesToAdd = object.getData(System.getProperty("user.dir") + "\\src\\test\\resources\\IngredientsDataInput.xlsx", "Nut_Allergies");
+						
 		try {
 		for(int k = 1; k <= paginationSize; k++)
-			//for(int k=0;k<2;k++)
+			
 
 		{
 			WebDriverWait w = new WebDriverWait(driver,Duration.ofSeconds(10));
@@ -82,13 +97,11 @@ public class EliminateAndToAddRecipies {
 			w.until(ExpectedConditions.elementToBeClickable(By.cssSelector(paginationSelector)));
 			driver.findElement(By.cssSelector(paginationSelector)).click();
 			List<WebElement> recipeCards = driver.findElements(By.xpath("//div[@class='rcc_rcpno']/span"));
-			//for(int j=0;j<recipeCards.size();j++)
-			for(int j=0;j<10;j++)
+			for(int j=0;j<recipeCards.size();j++)			
 			{
 				List<WebElement> recipeName= driver.findElements(By.xpath("//span[@class='rcc_recipename']"));
 
 			List<WebElement> recCards = driver.findElements(By.xpath("//div[@class='rcc_rcpno']/span"));
-			System.out.println(recCards.size() +" Loop-"+j);
 			GetterSetter_PCOS obj = new GetterSetter_PCOS();
 			String RecipeId = recCards.get(j).getText();
 			
@@ -132,6 +145,8 @@ public class EliminateAndToAddRecipies {
 			System.out.println(ingradientsToEliminate.size());
 			boolean eliminateRec = false;
 			boolean addRec = false;
+			boolean allergyRec = false;
+			boolean nutsAllergyRec = false;
 	//Elimination Part		
 			for(int x=0;x<ingradientsToEliminate.size();x++){
 				for(int y=0; y<ingradientsArray.length; y++) {
@@ -165,8 +180,9 @@ public class EliminateAndToAddRecipies {
 			}
 				}
 			}
+	
 			
-			if (addRec == true) {
+			if ((eliminateRec == false)&&(addRec == true)) {
 				addRecID.add(obj.getRecipeID());	
 				addRecName.add(RecipeName);
 				addPreparationTime.add(prepTime);
@@ -176,6 +192,52 @@ public class EliminateAndToAddRecipies {
 				addNutritionValue.add(nutritionalValue);
 				addRecipeUrl.add(driver.getCurrentUrl());
 			}
+  //Allergy Part
+			
+			for(int r=0;r<allergiesToAdd.size();r++){
+				
+				for(int s=0; s<ingradientsArray.length; s++) {
+									
+			if(allergiesToAdd.get(r).equals(ingradientsArray[s])) {
+				System.out.println("Match Found for Add " +allergiesToAdd.get(r));
+				allergyRec = true;
+				break;
+			}
+				}
+			}
+			if ((eliminateRec == false)&&(allergyRec == true)) {
+				allergyRecID.add(obj.getRecipeID());	
+				allergyRecName.add(RecipeName);
+				allergyPreparationTime.add(prepTime);
+				allergyCookTime.add(cookTime);
+				allergyIngradients.add(ingredientList);
+				allergyPreparationMethod.add(prepMethod);
+				allergyNutritionValue.add(nutritionalValue);
+				allergyRecipeUrl.add(driver.getCurrentUrl());
+			}
+//NutsAllergy			
+for(int r=0;r<nutsAllergiesToAdd.size();r++){
+				
+				for(int s=0; s<ingradientsArray.length; s++) {
+									
+			if(nutsAllergiesToAdd.get(r).equals(ingradientsArray[s])) {
+				System.out.println("Match Found for Add " +nutsAllergiesToAdd.get(r));
+				nutsAllergyRec = true;
+				break;
+			}
+				}
+			}
+			if ((eliminateRec == false)&&(nutsAllergyRec == true)) {
+				nutsallergyRecID.add(obj.getRecipeID());	
+				nutsallergyRecName.add(RecipeName);
+				nutsallergyPreparationTime.add(prepTime);
+				nutsallergyCookTime.add(cookTime);
+				nutsallergyIngradients.add(ingredientList);
+				nutsallergyPreparationMethod.add(prepMethod);
+				nutsallergyNutritionValue.add(nutritionalValue);
+				nutsallergyRecipeUrl.add(driver.getCurrentUrl());
+			}
+			
 			
 			driver.navigate().back();
 			}
@@ -184,8 +246,10 @@ public class EliminateAndToAddRecipies {
 			System.out.println("Error"+e.getMessage());
 		} finally {
 			
-			addRecipeToExcel("RecipeScrapping_PCOS.xlsx", "PCOS", eliRecID, eliRecName, eliPreparationTime, eliCookTime, eliIngradients, eliPreparationMethod, eliNutritionValue, eliRecipeUrl);
+			addRecipeToExcel("RecipeScrapping_PCOS.xlsx", "eliminateRecepePCOS", eliRecID, eliRecName, eliPreparationTime, eliCookTime, eliIngradients, eliPreparationMethod, eliNutritionValue, eliRecipeUrl);
 			addRecipeToExcel("RecipeToAdd.xlsx", "FruVegToAdd", addRecID, addRecName, addPreparationTime, addCookTime, addIngradients, addPreparationMethod, addNutritionValue, addRecipeUrl);
+			addRecipeToExcel("AllergyRecepies.xlsx", "AllergyToAdd", allergyRecID, allergyRecName, allergyPreparationTime, allergyCookTime, allergyIngradients, allergyPreparationMethod, allergyNutritionValue, allergyRecipeUrl);
+			addRecipeToExcel("NutsAllergyRecepies.xlsx", "NutsAllergyToAdd", nutsallergyRecID, nutsallergyRecName, nutsallergyPreparationTime, nutsallergyCookTime, nutsallergyIngradients, nutsallergyPreparationMethod, nutsallergyNutritionValue, nutsallergyRecipeUrl);
 					
 		driver.close();
 		}
@@ -203,50 +267,58 @@ public static void addRecipeToExcel(String file, String sheetName,List<String> r
 		
 	Row rowRecId= workSheet.createRow(0);
 	Row rowRecName= workSheet.createRow(1);
-	Row rowPrepTime = workSheet.createRow(2);
-	Row rowCookTime = workSheet.createRow(3);
-	Row rowIngradientsList = workSheet.createRow(4);
-	Row rowPrepMethod = workSheet.createRow(5);
-	Row rownutritionalValue = workSheet.createRow(6);
-	Row rowRecipeURL = workSheet.createRow(7);
+	Row rowFoodCat = workSheet.createRow(2);
+	Row rowPrepTime = workSheet.createRow(3);
+	Row rowCookTime = workSheet.createRow(4);
+	Row rowIngradientsList = workSheet.createRow(5);
+	Row rowPrepMethod = workSheet.createRow(6);
+	Row rownutritionalValue = workSheet.createRow(7);
+	Row rowRecipeURL = workSheet.createRow(8);
 	
 	int arrSize = recId.size();
 	for (int m = 0; m < arrSize; m++) {
 		workSheet.setColumnWidth(m, 10000);
-		workSheet.setDefaultRowHeight((short) 500);
-						
+		workSheet.setDefaultRowHeight((short) 600);
+										
 		if(m==0){
 			Cell cellHeader1= rowRecId.createCell(m);
 			Cell cellHeader2= rowRecName.createCell(m);
-			Cell cellHeader3 = rowCookTime.createCell(m);
-			Cell cellHeader4 = rowIngradientsList.createCell(m);
-			Cell cellHeader5 = rowPrepMethod.createCell(m);
+			Cell cellHeader3= rowFoodCat.createCell(m);
+
+			Cell cellHeader4 = rowCookTime.createCell(m);
+			Cell cellHeader5 = rowIngradientsList.createCell(m);
+			Cell cellHeader6 = rowPrepMethod.createCell(m);
 			
-			Cell cellHeader6 = rowRecipeURL.createCell(m);
-			Cell cellHeader7 = rowPrepTime.createCell(m);
-			Cell cellHeader8 =rownutritionalValue.createCell(m);
+			Cell cellHeader7 = rowRecipeURL.createCell(m);
+			Cell cellHeader8 = rowPrepTime.createCell(m);
+			Cell cellHeader9 =rownutritionalValue.createCell(m);
+			
 			
 			cellHeader1.setCellValue("Recipe ID");
 			cellHeader2.setCellValue("Recipe Name");
-			cellHeader3.setCellValue("Cooking Time");
-			cellHeader4.setCellValue("Ingradients List");
-			cellHeader5.setCellValue("Preparation Method");
-			cellHeader6.setCellValue("Recipe URL");
-			cellHeader7.setCellValue("Preparation Time");
-			cellHeader8.setCellValue("Nutritional Value");
+			cellHeader3.setCellValue("Food Category");
+
+			cellHeader4.setCellValue("Cooking Time");
+			cellHeader5.setCellValue("Ingradients List");
+			cellHeader6.setCellValue("Preparation Method");
+			cellHeader7.setCellValue("Recipe URL");
+			cellHeader8.setCellValue("Preparation Time");
+			cellHeader9.setCellValue("Nutritional Value");
+			
 		}
 		
 			Cell cellId= rowRecId.createCell(m+1);
 			Cell cellName= rowRecName.createCell(m+1);
+			Cell foodCat = rowFoodCat.createCell(m+1);
 			Cell cookTime = rowCookTime.createCell(m+1);
-			Cell ingradientList = rowIngradientsList.createCell(m+1);
-			
+			Cell ingradientList = rowIngradientsList.createCell(m+1);						
 			Cell prepMethod = rowPrepMethod.createCell(m+1);
 			Cell recipeNameUrl = rowRecipeURL.createCell(m+1);
 			Cell prepTime = rowPrepTime.createCell(m+1);
 			Cell nutriValue = rownutritionalValue.createCell(m+1);
 			cellId.setCellValue(recId.get(m));
 			cellName.setCellValue(recName.get(m));
+			foodCat.setCellValue("Veg");
 			cookTime.setCellValue(cookingTime.get(m));
 			ingradientList.setCellValue(ingradients.get(m));
 			prepMethod.setCellValue(preptnMethod.get(m));
@@ -260,5 +332,4 @@ public static void addRecipeToExcel(String file, String sheetName,List<String> r
 	workBook.close();
 }
 	
-
 }
