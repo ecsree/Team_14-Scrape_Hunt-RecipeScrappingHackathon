@@ -14,7 +14,7 @@ public class WriteScrappedDiabeticRecipesToExcel {
 	
     public void writeExcelSheet(int rowIndex,int columnIndex,String RecipeId,String RecipeName, String ingredientList, String preparationTime, String cookingTime,String preparationMethod,String nutritionalValue,String recipeUrl) throws IOException, InterruptedException {
     	
-    	String path = System.getProperty("user.dir")+"/src/test/java/Resources/ScrapedRecipesForDiabetes.xlsx";
+    	String path = System.getProperty("user.dir")+"/src/test/java/Resources/ScrapedDiabeticRecipesForEggAllergy.xlsx";
     	File excelFile = new File(path); 
     	XSSFWorkbook workbook=null;
     	XSSFSheet worksheet=null;

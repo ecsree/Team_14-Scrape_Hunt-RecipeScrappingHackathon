@@ -58,7 +58,7 @@ public class RecipeScrappingForDiabetes {
 			page=driver.findElements(By.xpath("//a[@class='respglink']"));
 			int numberOfPages = 23;
 			//numberOfPages = page.size();
-			for(int i=22;i<numberOfPages;i++) {
+			for(int i=1;i<numberOfPages;i++) {
 				driver.navigate().to("https://www.tarladalal.com/recipes-for-indian-diabetic-recipes-370?pageindex="+i);
 
 
@@ -170,19 +170,19 @@ public class RecipeScrappingForDiabetes {
 						rowIndex=0;
 						data.writeExcelSheet(++rowIndex,columnIndex,RecipeId,RecipeName,ingredientList,preparationTime,cookingTime,preparationMethod,nutritionalValue,recipeUrl);
 						
-						boolean isToAdd=false;
-						for(int a=0; a<add.size();a++) {
-							if(ingredientList.indexOf(add.get(a))!=-1) {
-								isToAdd=true;
-								break;
-							}
-					}
+//						boolean isToAdd=false;
+//						for(int a=0; a<add.size();a++) {
+//							if(ingredientList.indexOf(add.get(a))!=-1) {
+//								isToAdd=true;
+//								break;
+//							}
+//					}
 						
-						if(isToAdd) {
-							++addColumnindex;
-							rowIndex=0;
-							toAddRecipe.writeExcelSheet(++rowIndex,addColumnindex,RecipeId,RecipeName,ingredientList,preparationTime,cookingTime,preparationMethod,nutritionalValue,recipeUrl);
-						}
+//						if(isToAdd) {
+//							++addColumnindex;
+//							rowIndex=0;
+//							toAddRecipe.writeExcelSheet(++rowIndex,addColumnindex,RecipeId,RecipeName,ingredientList,preparationTime,cookingTime,preparationMethod,nutritionalValue,recipeUrl);
+//						}
 
 					try {
 						driver.navigate().back();
